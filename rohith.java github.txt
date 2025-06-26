@@ -1,0 +1,98 @@
+import java.io.*;
+import java.util.Scanner;
+
+public class FileEditor {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String fileName = "example.txt";
+
+        while (true) {
+            System.out.println("\n--- File Operations Menu ---");
+            System.out.println("1. Write to File");
+            System.out.println("2. Read from File");
+            System.out.println("3. Modify File Content");
+            System.out.println("4. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();  // consume newline
+
+            switch (choice) {
+                case 1:
+                    writeFile(fileName, scanner);
+                    break;
+                case 2:
+                    readFile(fileName);
+                    break;
+                case 3:
+                    modifyFile(fileName, scanner);
+                    break;
+                case 4:
+                    System.out.println("Exiting program.");
+                    return;
+                default:
+                    System.out.println("Invalid choice. Try again.");
+            }
+        }
+    }
+
+    // Write to file
+    private static void writeFile(String fileName, Scanner scanner) {
+        try {
+            System.out.println("Enter text to write to the file:");
+            String content = scanner.nextLine();
+            FileWriter writer = new FileWriter(fileName);
+            writer.write(content);
+            writer.close();
+            System.out.println("Content written successfully.");
+        } catch (IOException e) {
+            System.out.println("Error writing to file.");
+        }
+    }
+
+    // Read from file
+    private static void readFile(String fileName) {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            String line;
+            System.out.println("\n--- File Content ---");
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+            reader.close();
+        } catch (IOException e) {
+            System.out.println("Error reading file.");
+        }
+    }
+
+    // Modify file content
+    private static void modifyFile(String fileName, Scanner scanner) {
+        try {
+            // Read original content
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            StringBuilder content = new StringBuilder();
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                content.append(line).append("\n");
+            }
+            reader.close();
+
+            // Get input for modification
+            System.out.print("Enter word to replace: ");
+            String oldWord = scanner.nextLine();
+            System.out.print("Enter new word: ");
+            String newWord = scanner.nextLine();
+
+            // Replace and write back
+            String modifiedContent = content.toString().replace(oldWord, newWord);
+            FileWriter writer = new FileWriter(fileName);
+            writer.write(modifiedContent);
+            writer.close();
+
+            System.out.println("File modified successfully.");
+        } catch (IOException e) {
+            System.out.println("Error modifying file.");
+        }
+    }
+}
